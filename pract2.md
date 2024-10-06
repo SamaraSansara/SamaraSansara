@@ -24,6 +24,13 @@ pip show matplotlib
 
 Вывести служебную информацию о пакете express (JavaScript). Разобрать основные элементы содержимого файла со служебной информацией из пакета. Как получить пакет без менеджера пакетов, прямо из репозитория?
 
+```
+git clone https://github.com/expressjs/express.git
+cd express
+cat package.json
+```
+![изображение](https://github.com/user-attachments/assets/17f15b5f-96fe-4c67-ab23-a69cd0e92043)
+
 ## Задача 3
 
 Сформировать graphviz-код и получить изображения зависимостей matplotlib и express.
