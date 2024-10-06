@@ -159,30 +159,3 @@ h hello include int main n printf return stdio void world
 
 <img width="562" alt="Screenshot 2024-09-23 at 09 56 28" src="https://github.com/user-attachments/assets/b1b30605-5f54-4c56-97a8-f3c0b6f14098">
 
-
-## Полезные ссылки
-
-Линукс в браузере: https://bellard.org/jslinux/
-
-ShellCheck: https://www.shellcheck.net/
-
-Разработка CLI-приложений
-
-Общие сведения
-
-https://ru.wikipedia.org/wiki/Интерфейс_командной_строки
-https://nullprogram.com/blog/2020/08/01/
-https://habr.com/ru/post/150950/
-
-Стандарты
-
-https://www.gnu.org/prep/standards/standards.html#Command_002dLine-Interfaces
-https://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html
-https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html
-
-Реализация разбора опций
-
-Питон
-
-https://docs.python.org/3/library/argparse.html#module-argparse
-https://click.palletsprojects.com/en/7.x/
