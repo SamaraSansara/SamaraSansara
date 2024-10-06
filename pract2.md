@@ -8,6 +8,15 @@
 
 Вывести служебную информацию о пакете matplotlib (Python). Разобрать основные элементы содержимого файла со служебной информацией из пакета. Как получить пакет без менеджера пакетов, прямо из репозитория?
 
+pip install matplotlib
+pip show matplotlib
+
+![практика1 1](https://github.com/user-attachments/assets/d746fb6b-420a-48ee-af6c-f3026b0f2490)
+![практика1 2](https://github.com/user-attachments/assets/9986a590-54b8-4092-a112-94b6a889d05b)
+![практика1 3](https://github.com/user-attachments/assets/8ec611d7-a09a-4fad-ab0e-fb91d8af32a7)
+![практика1 4](https://github.com/user-attachments/assets/c4110a33-d868-4bd0-b719-8aa8663601fd)
+
+
 ## Задача 2
 
 Вывести служебную информацию о пакете express (JavaScript). Разобрать основные элементы содержимого файла со служебной информацией из пакета. Как получить пакет без менеджера пакетов, прямо из репозитория?
