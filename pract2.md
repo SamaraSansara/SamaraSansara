@@ -9,6 +9,7 @@
 Вывести служебную информацию о пакете matplotlib (Python). Разобрать основные элементы содержимого файла со служебной информацией из пакета. Как получить пакет без менеджера пакетов, прямо из репозитория?
 
 pip install matplotlib
+
 pip show matplotlib
 
 ![практика1 1](https://github.com/user-attachments/assets/d746fb6b-420a-48ee-af6c-f3026b0f2490)
