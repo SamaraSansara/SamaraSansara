@@ -136,53 +136,37 @@ cat package.json
 ## Задача 6
 
 Решить на MiniZinc задачу о зависимостях пакетов для следующих данных:
+```
+set of int: MenuVersion = {100, 110, 120, 130, 140, 150};
+set of int: DropDownVersion = {180, 200, 210, 220, 230};
+set of int: IconsVersion = {100, 200};
 
-```
-root 1.0.0 зависит от foo ^1.0.0 и target ^2.0.0.
-foo 1.1.0 зависит от left ^1.0.0 и right ^1.0.0.
-foo 1.0.0 не имеет зависимостей.
-left 1.0.0 зависит от shared >=1.0.0.
-right 1.0.0 зависит от shared <2.0.0.
-shared 2.0.0 не имеет зависимостей.
-shared 1.0.0 зависит от target ^1.0.0.
-target 2.0.0 и 1.0.0 не имеют зависимостей.
-```
-```minizinc
-  % Определяем пакеты
-  enum PACKAGES = {
-      root, 
-      foo_1_0_0, foo_1_1_0, 
-      left_1_0_0, right_1_0_0, 
-      shared_1_0_0, shared_2_0_0, 
-      target_1_0_0, target_2_0_0
-  };
-  
-  % Переменные, указывающие, установлен ли пакет (1) или нет (0)
-  array[PACKAGES] of var 0..1: installed;
-  
-  % Ограничения зависимостей
-  constraint
-      (installed[root] == 1) -> (installed[foo_1_1_0] == 1 /\ installed[target_2_0_0] == 1) /\
-      (installed[foo_1_1_0] == 1) -> (installed[left_1_0_0] == 1 /\ installed[right_1_0_0] == 1) /\
-      (installed[left_1_0_0] == 1) -> (installed[shared_1_0_0] == 1) /\
-      (installed[right_1_0_0] == 1) -> (installed[shared_2_0_0] == 1) /\ (installed[shared_1_0_0] == 0) /\
-      (installed[shared_1_0_0] == 1) -> (installed[target_1_0_0] == 1);
-  
-  % Обязательно устанавливаем root
-  constraint
-      installed[root] == 1;
-  
-  % Целевая функция: минимизируем количество установленных пакетов
-  solve minimize sum(installed);
-  
-  % Выводим результат
-  output [
-      "Installed packages: ", show(installed)
-  ];
-```
+var MenuVersion: menu;
+var DropDownVersion: dropdown;
+var IconsVersion: icons;
 
-  ![Снимок экрана 2024-09-22 221858](https://github.com/user-attachments/assets/e22cd150-dd76-454d-bef1-0dd03da6193f)
-  ![Снимок экрана 2024-09-22 221920](https://github.com/user-attachments/assets/5f198866-265a-40ee-a211-7b5dff42324c)
+% Ограничение для зависимости между menu и dropdown
+constraint
+  if menu >= 110 then
+    dropdown >= 200
+  else
+    dropdown = 180
+  endif;
+
+% Ограничение для зависимости между dropdown и icons
+constraint
+  if dropdown >= 200 then
+    icons = 200
+  else
+    icons = 100
+  endif;
+ 
+ output ["Menu Version: ", show(menu),
+         "\nDropdown Version: ", show(dropdown),
+         "\nIcons Versions: ", show(icons)]
+```
+<img width="1180" alt="Screenshot 2024-10-07 at 10 02 02" src="https://github.com/user-attachments/assets/62e2ef79-8c7a-4c8e-b362-76f9217862d1">
+
 
 
 ## Задача 7
