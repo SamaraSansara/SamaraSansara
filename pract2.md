@@ -177,65 +177,99 @@ output [
 ## Задача 7
 
 Представить задачу о зависимостях пакетов в общей форме. Здесь необходимо действовать аналогично реальному менеджеру пакетов. То есть получить описание пакета, а также его зависимости в виде структуры данных. Например, в виде словаря. В предыдущих задачах зависимости были явно заданы в системе ограничений. Теперь же систему ограничений надо построить автоматически, по метаданным.
-
-```python
-  # Пример структуры данных с зависимостями и версиями
-  packages = {
-      "root": {"dependencies": ["foo", "target"], "version": None},
-      "foo": {"dependencies": ["left", "right"], "version": None},
-      "left": {"dependencies": ["shared>=1.0.0"], "version": None},
-      "right": {"dependencies": ["shared<2.0.0"], "version": None},
-      "shared": {"dependencies": [], "version": None},
-      "target": {"dependencies": [], "version": None},
-  }
-  
-  def generate_minizinc_code(packages):
-      package_names = ', '.join(packages.keys())
-      # Генерация массива установленных пакетов
-      minizinc_code = f"enum PACKAGES = {{{package_names}}};\n"
-      minizinc_code += "array[PACKAGES] of var 0..1: installed;\n\n"
-      # Добавляем условие для root
-      minizinc_code += "constraint installed[root] == 1;\n"
-      # Генерация ограничений
-      for package, details in packages.items():
-          dependencies = details["dependencies"]
-          if dependencies:
-              dep_constraints = []
-              for dep in dependencies:
-                  if '>' in dep or '<' in dep or '=' in dep:
-                      dep_name = dep.split('>=')[0].split('<')[0].split('=')[0]
-                      dep_constraints.append(f"installed[{dep_name}] == 1")
-                  else:
-                      dep_constraints.append(f"installed[{dep}] == 1")
-              constraint = "constraint installed[{}] == 1 -> ({});\n".format(
-                  package, ' /\\ '.join(dep_constraints)
-              )
-              minizinc_code += constraint
-      minizinc_code += "\nsolve minimize sum(installed);\n"
-      minizinc_code += 'output ["Installed packages: ", show(installed)];\n'
-      return minizinc_code
-  
-  
-  # Генерация и вывод MiniZinc кода
-  minizinc_code = generate_minizinc_code(packages)
-  print(minizinc_code)
 ```
+packages = {
+    'root': {
+        '1.0.0': {
+            'dependencies': {
+                'foo': '^1.0.0',
+                'target': '^2.0.0'
+            }
+        }
+    },
+    'foo': {
+        '1.1.0': {
+            'dependencies': {
+                'left': '^1.0.0',
+                'right': '^1.0.0'
+            }
+        },
+        '1.0.0': {
+            'dependencies': {}
+        }
+    },
+    'left': {
+        '1.0.0': {
+            'dependencies': {
+                'shared': '>=1.0.0'
+            }
+        }
+    },
+    'right': {
+        '1.0.0': {
+            'dependencies': {
+                'shared': '<2.0.0'
+            }
+        }
+    },
+    'shared': {
+        '2.0.0': {
+            'dependencies': {}
+        },
+        '1.0.0': {
+            'dependencies': {
+                'target': '^1.0.0'
+            }
+        }
+    },
+    'target': {
+        '2.0.0': {
+            'dependencies': {}
+        },
+        '1.0.0': {
+            'dependencies': {}
+        }
+    }
+}
 
-  ВЫВОД:
-  
-  ```minizinc
-  enum PACKAGES = {root, foo, left, right, shared, target};
-  array[PACKAGES] of var 0..1: installed;
-  
-  constraint installed[root] == 1;
-  constraint installed[root] == 1 -> (installed[foo] == 1 /\ installed[target] == 1);
-  constraint installed[foo] == 1 -> (installed[left] == 1 /\ installed[right] == 1);
-  constraint installed[left] == 1 -> (installed[shared] == 1);
-  constraint installed[right] == 1 -> (installed[shared] == 1);
-  
-  solve minimize sum(installed);
-  output ["Installed packages: ", show(installed)];
-```
+def find_compatible_version(package_name, version_constraint, resolved):
+    def is_compatible(version, min_version='', max_version=''):
+        return (not min_version or version >= min_version) and (not max_version or version <= max_version)
 
-  ВЫВОД MiniZinc:
-  Installed packages: [1, 1, 1, 1, 1, 1]
+    min_version, max_version = '', ''
+    if version_constraint.startswith('^'):
+        min_version = version_constraint[1:] 
+    elif version_constraint.startswith('>='):
+        min_version = version_constraint[2:]
+    elif version_constraint.startswith('<='):
+        max_version = version_constraint[2:]
+    elif version_constraint.startswith('<'):
+        max_version = version_constraint[1:]
+
+    for version in sorted(packages[package_name].keys()):
+        if is_compatible(version, min_version, max_version) and package_name not in resolved:
+            if check_package_dependencies(package_name, version, resolved):
+                return True
+    return False
+
+def check_package_dependencies(package_name, version, resolved):
+    if package_name in resolved:
+        return True
+
+    for dep_pkg, dep_version in packages[package_name][version]['dependencies'].items():
+        if not find_compatible_version(dep_pkg, dep_version, resolved):
+            return False  
+
+    resolved[package_name] = version
+    return True
+
+resolved_set = {}
+root_version = '1.0.0'
+if check_package_dependencies('root', root_version, resolved_set):
+    print("Совместимые версии пакетов:")
+    for pkg, ver in resolved_set.items():
+        print(f"Пакет: {pkg}, Версия: {ver}")
+else:
+    print("Not found")
+```]
+<img width="944" alt="Screenshot 2024-10-07 at 10 29 26" src="https://github.com/user-attachments/assets/c856398d-f1bf-42e8-97c3-de05d26c2243">
