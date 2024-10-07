@@ -60,20 +60,10 @@ cat package.json
   
 ```minizinc
   include "alldifferent.mzn";  % Подключаем библиотеку для alldifferent
-
-  % Определяем массив для хранения 6 цифр билета
   array[1..6] of var 0..9: digits;
-  
-  % Ограничение: все цифры должны быть различными
   constraint alldifferent(digits);
-  
-  % Ограничение: сумма первых трёх цифр должна равняться сумме последних трёх
   constraint sum(digits[1..3]) = sum(digits[4..6]);
-  
-  % Целевая функция: минимизируем сумму первых трёх цифр
   solve minimize sum(digits[1..3]);
-  
-  % Выводим результат
   output [
       "Digits: ", show(digits), 
       "\nSum of first 3 digits: ", show(sum(digits[1..3])), 
