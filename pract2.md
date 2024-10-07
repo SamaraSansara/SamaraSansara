@@ -87,54 +87,6 @@ cat package.json
 
 ## Задача 5
 
-Решить на MiniZinc задачу о зависимостях пакетов для рисунка, приведенного ниже.
-
-![](images/pubgrub.png)
-
-```minizinc
-  % Определяем пакеты
-  enum PACKAGES = {
-      root, 
-      menu_1_0_0, menu_1_1_0, menu_1_2_0, menu_1_3_0, menu_1_4_0, menu_1_5_0, 
-      dropdown_2_0_0, dropdown_2_1_0, dropdown_2_2_0, dropdown_2_3_0, dropdown_1_8_0,
-      icons_1_0_0, icons_2_0_0
-  };
-  
-  % Переменные, указывающие, установлен ли пакет (1) или нет (0)
-  array[PACKAGES] of var 0..1: installed;
-  
-  % Обязательно устанавливаем root
-  constraint
-      installed[root] == 1;
-  
-  % Ограничения зависимостей
-  constraint
-      (installed[root] == 1) -> (installed[menu_1_0_0] == 1 /\ installed[menu_1_5_0] == 1 /\ installed[icons_1_0_0] == 1) /\
-      (installed[menu_1_5_0] == 1) -> (installed[dropdown_2_3_0] == 1 /\ installed[dropdown_2_0_0] == 1) /\
-      (installed[menu_1_4_0] == 1) -> (installed[dropdown_2_3_0] == 1 /\ installed[dropdown_2_0_0] == 1) /\
-      (installed[menu_1_3_0] == 1) -> (installed[dropdown_2_3_0] == 1 /\ installed[dropdown_2_0_0] == 1) /\
-      (installed[menu_1_2_0] == 1) -> (installed[dropdown_2_3_0] == 1 /\ installed[dropdown_2_0_0] == 1) /\
-      (installed[menu_1_1_0] == 1) -> (installed[dropdown_2_3_0] == 1 /\ installed[dropdown_2_0_0] == 1) /\
-      (installed[menu_1_0_0] == 1) -> (installed[dropdown_1_8_0] == 1) /\
-      (installed[dropdown_2_0_0] == 1) -> (installed[icons_2_0_0] == 1) /\
-      (installed[dropdown_2_1_0] == 1) -> (installed[icons_2_0_0] == 1) /\
-      (installed[dropdown_2_2_0] == 1) -> (installed[icons_2_0_0] == 1) /\
-      (installed[dropdown_2_3_0] == 1) -> (installed[icons_2_0_0] == 1);
-  
-  % Целевая функция: минимизируем количество установленных пакетов
-  solve minimize sum(installed);
-  
-  % Выводим результат
-  output [
-      "Installed packages: ", show(installed)
-  ];
-```
-
-  ![Снимок экрана 2024-09-22 221309](https://github.com/user-attachments/assets/9aedc894-8d3e-4e55-a5dd-9e2b513afd13)
-
-
-## Задача 6
-
 Решить на MiniZinc задачу о зависимостях пакетов для следующих данных:
 <img width="573" alt="Screenshot 2024-10-07 at 10 05 36" src="https://github.com/user-attachments/assets/92db945a-d4c8-4915-b606-0f641568e648">
 
@@ -169,6 +121,69 @@ constraint
 ```
 <img width="1180" alt="Screenshot 2024-10-07 at 10 02 02" src="https://github.com/user-attachments/assets/62e2ef79-8c7a-4c8e-b362-76f9217862d1">
 
+
+## Задача 6
+
+Решить на MiniZinc задачу о зависимостях пакетов для следующих данных:
+
+```
+root 1.0.0 зависит от foo ^1.0.0 и target ^2.0.0.
+foo 1.1.0 зависит от left ^1.0.0 и right ^1.0.0.
+foo 1.0.0 не имеет зависимостей.
+left 1.0.0 зависит от shared >=1.0.0.
+right 1.0.0 зависит от shared <2.0.0.
+shared 2.0.0 не имеет зависимостей.
+shared 1.0.0 зависит от target ^1.0.0.
+target 2.0.0 и 1.0.0 не имеют зависимостей.
+```
+
+```
+int: root = 100;
+var 100..300: foo;
+var 100..300: target;
+var 100..300: left;
+var 100..300: right;
+var 100..300: shared;
+
+constraint
+  root = 100 ->
+  (foo >= 100 /\ foo < 200 /\ 
+  target >= 200 /\ target < 300);
+ 
+constraint
+  foo = 110 -> 
+  (left >= 100 /\ left < 200 /\
+  right >= 100 /\ right < 200);
+ 
+constraint
+  (left = 100 -> shared >= 100) /\
+  (right = 100 -> shared < 200);
+
+constraint
+  left = 100 ->
+  (shared >= 100);
+ 
+constraint
+  right = 100 ->
+  (shared < 200);
+  
+constraint
+  shared = 100 ->
+  (target >= 100 /\ target < 200);
+
+output [
+    "Root Version: ", show(root), "\n",
+    "Foo Version: ", show(foo), "\n",
+    "Left Version: ", show(left), "\n",
+    "Right Version: ", show(right), "\n",
+    "Shared Version: ", show(shared), "\n",
+    "Target Version: ", show(target), "\n"
+];
+```
+
+<img width="808" alt="Screenshot 2024-10-07 at 10 12 23" src="https://github.com/user-attachments/assets/aa70e0e2-8e6b-4050-bc6b-313668d9f400">
+<img width="806" alt="Screenshot 2024-10-07 at 10 12 40" src="https://github.com/user-attachments/assets/57e32c5b-37fd-4a73-b2a6-a4becfc6757f">
+<img width="803" alt="Screenshot 2024-10-07 at 10 12 54" src="https://github.com/user-attachments/assets/6a404f5d-f149-410a-a298-7c090689185c">
 
 
 ## Задача 7
