@@ -81,9 +81,7 @@ cat package.json
   ];
 ```
 
-  ![Снимок экрана 2024-09-22 214850](https://github.com/user-attachments/assets/5b4ab1ef-1238-47aa-8c17-3f6a9ae03118)
-  ![Снимок экрана 2024-09-22 214931](https://github.com/user-attachments/assets/9923e75c-83c8-4736-bb04-6b51e5803d12)
-
+<img width="811" alt="Screenshot 2024-10-07 at 10 16 53" src="https://github.com/user-attachments/assets/1285d5a6-e45d-43da-9d39-97352c957f88">
 
 ## Задача 5
 
