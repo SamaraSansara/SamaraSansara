@@ -271,5 +271,5 @@ if check_package_dependencies('root', root_version, resolved_set):
         print(f"Пакет: {pkg}, Версия: {ver}")
 else:
     print("Not found")
-```]
+```
 <img width="944" alt="Screenshot 2024-10-07 at 10 29 26" src="https://github.com/user-attachments/assets/c856398d-f1bf-42e8-97c3-de05d26c2243">
