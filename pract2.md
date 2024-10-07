@@ -136,6 +136,8 @@ cat package.json
 ## Задача 6
 
 Решить на MiniZinc задачу о зависимостях пакетов для следующих данных:
+<img width="573" alt="Screenshot 2024-10-07 at 10 05 36" src="https://github.com/user-attachments/assets/92db945a-d4c8-4915-b606-0f641568e648">
+
 ```
 set of int: MenuVersion = {100, 110, 120, 130, 140, 150};
 set of int: DropDownVersion = {180, 200, 210, 220, 230};
