@@ -4,10 +4,39 @@
 
 Разобраться, что собой представляют программируемые конфигурационные языки (Jsonnet, Dhall, CUE).
 
-## Задача 1
+  ## Задача 1
 
 Реализовать на Jsonnet приведенный ниже пример в формате JSON. Использовать в реализации свойство программируемости и принцип DRY.
 
+Решение:
+
+```
+
+local groupPrefix = "ИКБО-";
+local groupSuffix = "-20";
+
+local groups = [groupPrefix + x + groupSuffix for x in std.range(1, 24)];
+
+local students = [
+  { age: 19, group: groupPrefix + "4" + groupSuffix, name: "Иванов И.И." },
+  { age: 18, group: groupPrefix + "5" + groupSuffix, name: "Петров П.П." },
+  { age: 18, group: groupPrefix + "5" + groupSuffix, name: "Сидоров С.С." },
+  { age: 19, group: groupPrefix + "1" + groupSuffix, name: "Уджуху В.Т." }
+];
+
+{
+  groups: groups,
+  students: students,
+  subject: "Конфигурационное управление"
+}
+
+```
+<img width="522" alt="Screenshot 2024-10-18 at 19 38 47" src="https://github.com/user-attachments/assets/7cfef0f3-d214-4ace-a13a-f342bb98964f">
+
+<img width="527" alt="Screenshot 2024-10-18 at 19 39 03" src="https://github.com/user-attachments/assets/9b458477-c66a-44d4-9c3d-74db29b364b5">
+
+
+<img width="523" alt="Screenshot 2024-10-18 at 19 39 25" src="https://github.com/user-attachments/assets/ad63fdbf-ffa4-4597-a4b2-c5515e064d44">
 
 
 ## Задача 2
