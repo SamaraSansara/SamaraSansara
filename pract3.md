@@ -152,9 +152,19 @@ in {groups = groups, students = students, subject = subject}
 ```
 <img width="345" alt="Screenshot 2024-10-20 at 15 05 35" src="https://github.com/user-attachments/assets/0d7c6baa-4cf1-4ace-b84e-96dca7364e2d">
 
+
+
 <img width="350" alt="Screenshot 2024-10-20 at 15 05 48" src="https://github.com/user-attachments/assets/65e76a60-8658-4cc4-a57e-735d4b948b00">
 
+
+
 <img width="364" alt="Screenshot 2024-10-20 at 15 06 07" src="https://github.com/user-attachments/assets/81bcadd9-d913-4bd2-a898-b8d86171c906">
+
+
+
+
+
+
 <img width="475" alt="Screenshot 2024-10-20 at 15 06 18" src="https://github.com/user-attachments/assets/074e025e-b535-4c8b-ba3c-e7f6b4710701">
 
 
