@@ -203,10 +203,8 @@ BNF = '''
 <sequence> ::= "0" | "1" | "00" | "11" | "10" | "100" | "101101" | <sequence> "0" | <sequence> "1"
 '''
 
-# Выводим текст задачи
 print("10\n100\n11\n101101\n000\n")
 
-# Выводим сгенерированные случайные фразы
 grammar = parse_bnf(BNF)
 for i in range(10):
     print(generate_phrase(grammar, '<start>'))
@@ -229,6 +227,45 @@ for i in range(10):
 {}
 ```
 
+Решение: 
+
+
+```
+import random
+
+def parse_bnf(text):
+    '''
+    Преобразовать текстовую запись БНФ в словарь.
+    '''
+    grammar = {}
+    rules = [line.split('::=') for line in text.strip().split('\n')]
+    for name, body in rules:
+        grammar[name.strip()] = [alt.strip().split() for alt in body.split('|')]
+    return grammar
+
+
+def generate_phrase(grammar, start):
+    if start in grammar:
+        seq = random.choice(grammar[start])
+        return ''.join([generate_phrase(grammar, name) for name in seq])
+    return str(start)
+
+BNF = '''
+<start> ::= <brackets>
+<brackets> ::= <round> | <curly> | <round> <brackets> | <curly> <brackets>
+<round> ::= "(" <brackets> ")" | "()"
+<curly> ::= "{" <brackets> "}" | "{}"
+'''
+print("(({((()))}))\n{}\n{()}\n()\n{}\n")
+
+grammar = parse_bnf(BNF)
+for i in range(10):
+    print(generate_phrase(grammar, '<start>'))
+
+```
+<img width="850" alt="Screenshot 2024-10-20 at 18 40 03" src="https://github.com/user-attachments/assets/40afe46c-9a1a-407a-8fab-691c75f3b365">
+
+
 ## Задача 5
 
 Язык выражений алгебры логики.
@@ -240,3 +277,45 @@ y & ~(y)
 ~x
 ~((x) & y | (y) | (x)) & x | x | (y & ~y)
 ```
+
+
+Решение: 
+
+```
+import random
+
+def parse_bnf(text):
+    grammar = {}
+    rules = [line.split('::=') for line in text.strip().split('\n')]
+    for name, body in rules:
+        grammar[name.strip()] = [alt.strip().split() for alt in body.split('|')]
+    return grammar
+
+
+def generate_phrase(grammar, start, max_depth=10, depth=0):
+    if depth > max_depth:
+        return random.choice(["x", "y"])  
+    
+    if start in grammar:
+        seq = random.choice(grammar[start])
+        return ''.join([generate_phrase(grammar, name, max_depth, depth + 1) for name in seq])
+    
+    return str(start)
+
+BNF = '''
+<start> ::= <expression>
+<expression> ::= <term> | <expression> "|" <term> | <expression> "&" <term>
+<term> ::= <factor> | <term> "&" <factor> | <term> "|" <factor>
+<factor> ::= <variable> | "~" <factor> | <term>
+<variable> ::= x | y
+'''
+
+print("Реализовать грамматики, описывающие язык выражений алгебры логики.\n")
+
+grammar = parse_bnf(BNF)
+for i in range(10):
+    print(generate_phrase(grammar, '<start>'))
+```
+<img width="340" alt="Screenshot 2024-10-20 at 18 53 38" src="https://github.com/user-attachments/assets/bab0c812-7ff6-4deb-bbab-63031a8d1fac">
+
+
