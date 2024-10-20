@@ -129,6 +129,35 @@ for i in range(10):
 
 ```
 
+Решение: 
+
+```
+let List/map = https://prelude.dhall-lang.org/List/map
+let List/generate = https://prelude.dhall-lang.org/v15.0.0/List/generate
+
+let groups = List/generate 24 Text (\(n : Natural) -> "ИКБО-${Natural/show (n + 1)}-20")
+
+let Student = {age: Natural, group: Text, name: Text}
+
+let students : List Student = 
+[ { age = 19, group = "ИКБО-4-20", name = "Иванов И.И." }, 
+  { age = 18, group = "ИКБО-5-20", name = "Петров П.П." },
+  { age = 18, group = "ИКБО-5-20", name = "Сидоров С.С." },
+  { age = 19, group = "ИКБО-10-23", name = "Хайруллин Д.Л." }
+]
+
+let subject : Text = "Конфигурационное управление"
+
+in {groups = groups, students = students, subject = subject}
+```
+<img width="345" alt="Screenshot 2024-10-20 at 15 05 35" src="https://github.com/user-attachments/assets/0d7c6baa-4cf1-4ace-b84e-96dca7364e2d">
+
+<img width="350" alt="Screenshot 2024-10-20 at 15 05 48" src="https://github.com/user-attachments/assets/65e76a60-8658-4cc4-a57e-735d4b948b00">
+
+<img width="364" alt="Screenshot 2024-10-20 at 15 06 07" src="https://github.com/user-attachments/assets/81bcadd9-d913-4bd2-a898-b8d86171c906">
+<img width="475" alt="Screenshot 2024-10-20 at 15 06 18" src="https://github.com/user-attachments/assets/074e025e-b535-4c8b-ba3c-e7f6b4710701">
+
+
 Реализовать грамматики, описывающие следующие языки (для каждого решения привести БНФ). Код решения должен содержаться в переменной BNF:
 
 ## Задача 3
