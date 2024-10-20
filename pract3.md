@@ -143,7 +143,7 @@ let students : List Student =
 [ { age = 19, group = "ИКБО-4-20", name = "Иванов И.И." }, 
   { age = 18, group = "ИКБО-5-20", name = "Петров П.П." },
   { age = 18, group = "ИКБО-5-20", name = "Сидоров С.С." },
-  { age = 19, group = "ИКБО-10-23", name = "Хайруллин Д.Л." }
+  { age = 19, group = "ИКБО-10-23", name = "Уджуху В.Т." }
 ]
 
 let subject : Text = "Конфигурационное управление"
@@ -161,11 +161,8 @@ in {groups = groups, students = students, subject = subject}
 <img width="364" alt="Screenshot 2024-10-20 at 15 06 07" src="https://github.com/user-attachments/assets/81bcadd9-d913-4bd2-a898-b8d86171c906">
 
 
+<img width="472" alt="Screenshot 2024-10-20 at 16 50 33" src="https://github.com/user-attachments/assets/e38dd8d8-e4d1-4041-b0ab-79e4621d218f">
 
-
-
-
-<img width="475" alt="Screenshot 2024-10-20 at 15 06 18" src="https://github.com/user-attachments/assets/074e025e-b535-4c8b-ba3c-e7f6b4710701">
 
 
 Реализовать грамматики, описывающие следующие языки (для каждого решения привести БНФ). Код решения должен содержаться в переменной BNF:
