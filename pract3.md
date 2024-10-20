@@ -178,6 +178,44 @@ in {groups = groups, students = students, subject = subject}
 101101
 000
 ```
+Решение: 
+
+```
+import random
+
+def parse_bnf(text):
+    grammar = {}
+    rules = [line.split('::=') for line in text.strip().split('\n')]
+    for name, body in rules:
+        grammar[name.strip()] = [alt.strip().split() for alt in body.split('|')]
+    return grammar
+
+
+def generate_phrase(grammar, start):
+    if start in grammar:
+        seq = random.choice(grammar[start])
+        return ''.join([generate_phrase(grammar, name) for name in seq])
+    return str(start)
+
+
+BNF = '''
+<start> ::= <sequence>
+<sequence> ::= "0" | "1" | "00" | "11" | "10" | "100" | "101101" | <sequence> "0" | <sequence> "1"
+'''
+
+# Выводим текст задачи
+print("10\n100\n11\n101101\n000\n")
+
+# Выводим сгенерированные случайные фразы
+grammar = parse_bnf(BNF)
+for i in range(10):
+    print(generate_phrase(grammar, '<start>'))
+
+```
+
+<img width="97" alt="Screenshot 2024-10-20 at 18 29 46" src="https://github.com/user-attachments/assets/8f30560d-21e2-4c66-aca4-e749c1ad6cdc">
+
+
 
 ## Задача 4
 
