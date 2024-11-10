@@ -94,4 +94,3 @@ SHA-1
 https://ru.m.wikipedia.org/wiki/Парадокс_дней_рождения
 
 https://security.googleblog.com/2017/02/announcing-first-sha1-collision.html
-
