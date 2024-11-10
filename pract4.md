@@ -89,9 +89,8 @@ Coder2 добавляет в readme в раздел об авторах свою
 
 Решение: 
 
-.....................................................................
 <img width="663" alt="Screenshot 2024-11-10 at 21 59 22" src="https://github.com/user-attachments/assets/542e903a-05d3-41d3-aa48-23c3af01e804">
-.....................................................................
+
 <img width="665" alt="Screenshot 2024-11-10 at 21 59 39" src="https://github.com/user-attachments/assets/be47c4dc-ed85-4783-abbc-a97b3aaabc87">
 
 
@@ -99,32 +98,14 @@ Coder2 добавляет в readme в раздел об авторах свою
 
 Написать программу на Питоне (или другом ЯП), которая выводит список содержимого всех объектов репозитория. Воспользоваться командой "git cat-file -p". Идеальное решение – не использовать иных сторонних команд и библиотек для работы с git.
 
-## Полезные ссылки
+Решение: 
 
-Git
 
-Учебник (рус.): https://git-scm.com/book/ru/v2
+<img width="765" alt="Screenshot 2024-11-10 at 22 41 48" src="https://github.com/user-attachments/assets/e5ccafa7-c1a3-402c-bc18-0f6ce5ba7366">
 
-Шпаргалка (рус.): https://training.github.com/downloads/ru/github-git-cheat-sheet/
+<img width="735" alt="Screenshot 2024-11-10 at 22 42 15" src="https://github.com/user-attachments/assets/4fe94f81-28f2-49f5-8f99-2de8bb4c7453">
 
-Официальная документация: https://git-scm.com/docs
+<img width="498" alt="Screenshot 2024-11-10 at 22 41 15" src="https://github.com/user-attachments/assets/e89550fa-3dbd-4b00-8854-9b839110e9d0">
 
-Эксцентричный доклад Л. Торвальдса о Git: https://www.youtube.com/watch?v=4XpnKHJAok8
+<img width="461" alt="Screenshot 2024-11-10 at 22 41 35" src="https://github.com/user-attachments/assets/cd9a59f2-48e8-41fa-a082-e763de0d2edd">
 
-Дерево Меркла: http://cryptowiki.net/index.php?title=Дерево_Merkle
-
-Git for Windows: https://git-scm.com/download/win
-
-Репозиторий chibicc: https://github.com/rui314/chibicc.git
-
-Игра по git: https://learngitbranching.js.org/?locale=ru_RU
-
-SHA-1
-
-Описание алгоритма: https://ru.wikipedia.org/wiki/SHA-1
-
-Вероятность хеш-коллизии: https://preshing.com/20110504/hash-collision-probabilities/
-
-https://ru.m.wikipedia.org/wiki/Парадокс_дней_рождения
-
-https://security.googleblog.com/2017/02/announcing-first-sha1-collision.html
