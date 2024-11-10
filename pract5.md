@@ -23,7 +23,7 @@
 
 Решение: 
 
-.....................................................................
+
 <img width="691" alt="Screenshot 2024-11-10 at 19 39 08" src="https://github.com/user-attachments/assets/21052b27-899f-4b2d-90b2-40983153d17b">
 .....................................................................
 <img width="766" alt="Screenshot 2024-11-10 at 19 40 16" src="https://github.com/user-attachments/assets/381b1cdf-99b8-454b-92df-bcc89c23fb35">
