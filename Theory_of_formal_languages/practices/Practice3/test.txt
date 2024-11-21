@@ -1,0 +1,6 @@
+int a, b
+begin
+while (a = 1):
+    a:=61e+2;
+    writeln a;
+end(*Комментарий*)
