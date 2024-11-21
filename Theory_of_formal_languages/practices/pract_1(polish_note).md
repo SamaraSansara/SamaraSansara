@@ -6,89 +6,6 @@
 Загружаете отчет в PDF, назвав в формате «Группа_Фамилия_Имя_ПР-номер» (Например, ИКБО-40-23_Иванов_Иван_ПР1).
 
 ```
-precedence = {
-    '+': 1,
-    '-': 1,
-    '*': 2,
-    '/': 2,
-    '^': 3
-}
-
-def infix_to_postfix(expression):
-    output = []
-    stack = []
-
-    # Проходим по каждому токену в выражении
-    for token in expression.split():
-        if token.isalnum():
-            output.append(token)
-        elif token in precedence: 
-            while (stack and stack[-1] != '(' and precedence[stack[-1]] > precedence[token]):
-               output.append(stack.pop())
-            stack.append(token)
-        elif token == '(':  
-            stack.append(token)
-        elif token == ')': 
-            while stack and stack[-1] != '(':
-                output.append(stack.pop()) #Операторы выталкиваются из стека в output.
-            stack.pop()  # Удаляем '(' из стека
-
-    # Извлекаем оставшиеся операторы из стека
-    while stack: 
-        output.append(stack.pop())
-
-    return ' '.join(output)  # Объединяем список в строку
-#Возвращаем строку, где элементы списка output объединены пробелами, — это и есть постфиксная запись.
-
-expression = input("Введите алгебраическое выражение: ")
-postfix = infix_to_postfix(expression)
-print("Обратная польская запись:", postfix)
-
-
-
-precedence = {
-    '+': 1,
-    '-': 1,
-    '*': 2,
-    '/': 2,
-    '^': 3
-}
-
-def infix_to_postfix(expression):
-    output = []
-    stack = []
-
-    # Проходим по каждому токену в выражении
-    for token in expression.split():
-        if token.isalnum():
-            output.append(token)
-        elif token in precedence: 
-            while (stack and stack[-1] != '(' and precedence[stack[-1]] > precedence[token]):
-               output.append(stack.pop())
-            stack.append(token)
-        elif token == '(':  
-            stack.append(token)
-        elif token == ')': 
-            while stack and stack[-1] != '(':
-                output.append(stack.pop()) #Операторы выталкиваются из стека в output.
-            stack.pop()  # Удаляем '(' из стека
-
-    # Извлекаем оставшиеся операторы из стека
-    while stack: 
-        output.append(stack.pop())
-
-    return ' '.join(output)  # Объединяем список в строку
-#Возвращаем строку, где элементы списка output объединены пробелами, — это и есть постфиксная запись.
-
-expression = input("Введите алгебраическое выражение: ")
-postfix = infix_to_postfix(expression)
-print("Обратная польская запись:", postfix)
-
-```
-
-
-
-
 Создается словарь precedence, который хранит приоритет каждой операции.
     * '+' и '-' имеют приоритет 1 (самый низкий).
     * '*' и '/' имеют приоритет 2.
@@ -106,7 +23,7 @@ def infix_to_postfix(expression):
     output = []# Для хранения выходной записи, будут записываться токены в постфиксном порядке.
     stack = []# Стек для хранения операторов, будет использоваться для хранения операторов, пока они не будут обработаны.
 
-    Проходим по каждому токену в выражении
+    # Проходим по каждому токену в выражении
     for token in expression.split():#Цикл перебирает токены, полученные из expression с помощью split() (разбиение по пробелам).
         if token.isalnum():#Проверяет, является ли токен числом или буквой (т.е. является ли он операндом).
             output.append(token)#Если это операнд, добавляется в output.
@@ -122,13 +39,17 @@ def infix_to_postfix(expression):
                 output.append(stack.pop()) #Операторы выталкиваются из стека в output.
             stack.pop()  # Удаляем '(' из стека
 
-    Извлекаем оставшиеся операторы из стека
+    # Извлекаем оставшиеся операторы из стека
     while stack: #После обработки всех токенов,  очищаем стек, выталкивая оставшиеся операторы в output.
         output.append(stack.pop())
 
     return ' '.join(output)  # Объединяем список в строку
-Возвращаем строку, где элементы списка output объединены пробелами, — это и есть постфиксная запись.
+#Возвращаем строку, где элементы списка output объединены пробелами, — это и есть постфиксная запись.
 
 expression = input("Введите алгебраическое выражение: ")
 postfix = infix_to_postfix(expression)
 print("Обратная польская запись:", postfix)
+
+```
+
+
