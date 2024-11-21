@@ -182,7 +182,7 @@ end(*Комментарий*)
 ```
 
 
-Результат: 
+## Результат: 
 ```
 Lexical analysis successful.
 Token Name: IDENT, Token Value: int
