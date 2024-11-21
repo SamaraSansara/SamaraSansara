@@ -180,3 +180,45 @@ while (a = 1):
     writeln a;
 end(*Комментарий*)
 ```
+
+
+Результат: 
+```
+Lexical analysis successful.
+Token Name: IDENT, Token Value: int
+Token Name: IDENT, Token Value: a
+Token Name: DELIM, Token Value: ,
+Token Name: IDENT, Token Value: b
+Token Name: IDENT, Token Value: begin
+Token Name: KWORD, Token Value: while
+Token Name: DELIM, Token Value: (
+Token Name: IDENT, Token Value: a
+Token Name: OPER, Token Value: =
+Token Name: NUM, Token Value: 1
+Token Name: DELIM, Token Value: )
+Token Name: DELIM, Token Value: :
+Token Name: IDENT, Token Value: a
+Token Name: DELIM, Token Value: :
+Token Name: OPER, Token Value: =
+Token Name: NUM, Token Value: 61e+2
+Token Name: DELIM, Token Value: ;
+Token Name: IDENT, Token Value: writeln
+Token Name: IDENT, Token Value: a
+Token Name: DELIM, Token Value: ;
+Token Name: IDENT, Token Value: end
+Token Name: DELIM, Token Value: (
+Token Name: OPER, Token Value: *
+Token Name: IDENT, Token Value: Комментарий
+Token Name: OPER, Token Value: *
+Token Name: DELIM, Token Value: )
+
+```
+
+<img width="763" alt="Screenshot 2024-11-21 at 04 00 38" src="https://github.com/user-attachments/assets/410b6947-5342-44ae-a43a-e7a73cd58e28">
+
+<img width="755" alt="Screenshot 2024-11-21 at 04 00 50" src="https://github.com/user-attachments/assets/7b740a73-827f-497d-aa2b-fb8c06c5f391">
+
+Открываем терминал:
+
+<img width="767" alt="Screenshot 2024-11-21 at 04 01 21" src="https://github.com/user-attachments/assets/5595baa4-0169-49b8-bcd9-4be7dab14c66">
+
