@@ -1,6 +1,13 @@
-int a, b
-begin
-while (a = 1):
-    a:=61e+2;
-    writeln a;
-end(*Комментарий*)
+dim a, b : integer;
+(* Комментарий *)
+a := 5 plus 3;
+if a GT b then
+    a := a min b;
+while a LT b do
+    a := a div 2x;
+    if a ~ 0 then
+        a := a plus 1;
+    end_else;
+input(a);
+output(a);
+end;
