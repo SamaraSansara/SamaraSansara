@@ -1,224 +1,344 @@
-# Практическое занятие №3.
+# Курсовая работа. Практическое занятие №3,№4
 
 ## Задание: 
-Разработать программно-математическую модель распознавателя языка программирования. На выбранном ЯП реализовать простой лексический анализатор на базе конечного автомата.
+Разработать программно-математическую модель распознавателя языка программирования. На выбранном ЯП реализовать простой лексический и синтакический анализаторы на базе конечного автомата.
 
-lexical_analyzator.py:
+main.py:
 ```
-class States:
-    H = "H"
-    ID = "ID"
-    NUM = "NUM"
-    OPER = "OPER"
-    DELIM = "DELIM"
-    COMM = "COMM"
-    ERR = "ERR"
+from typing import List, Tuple, Optional
 
 
-class TokNames:
-    KWORD = "KWORD"
-    IDENT = "IDENT"
-    NUM = "NUM"
-    OPER = "OPER"
-    DELIM = "DELIM"
-    COMMENT = "COMMENT"
+#Лексер разбивает исходный текст на токены. Токен — это минимальная значимая единица программы: числа, операторы, ключевые слова, разделители.
+class Lexer:
+    def __init__(self, data: str):
+        self.data = data 
+        self.tokens: List[Tuple[str, str]] = [] 
+        self.current_pos = 0 
+        self.keywords = {'dim', 'if', 'then', 'else', 'for', 'to', 'do', 'while', 'end', 'true', 'false', 'input', 'output'}
+        self.operations = {'plus', 'min', 'mult', 'div', 'NE', 'EQ', 'LT', 'LE', 'GT', 'GE', 'and', 'or', '~'}
+
+    def get_next_char(self) -> Optional[str]: 
+        if self.current_pos < len(self.data): 
+            char = self.data[self.current_pos] 
+            self.current_pos += 1 
+            return char 
+        return None 
+    def peek_next_char(self) -> Optional[str]: 
+        if self.current_pos < len(self.data): 
+            return self.data[self.current_pos] 
+        return None 
+    def tokenize(self) -> List[Tuple[str, str]]: 
+        current_char = self.get_next_char() 
+        while current_char is not None: 
+            if current_char.isspace():
+                current_char = self.get_next_char()
+                continue
+
+            if current_char == '(' and self.peek_next_char() == '*':
+                self.get_next_char()
+                self.tokens.append(('DELIM', '(*'))
+                current_char = self.get_next_char()
+                token = ""
+                while current_char is not None:
+                    if current_char == '*' and self.peek_next_char() == ')':
+                        self.tokens.append(('IDENTIFICATOR', token.strip()))
+                        self.get_next_char()  #  ')'
+                        self.tokens.append(('DELIM', '*)'))
+                        break
+                    token += current_char
+                    current_char = self.get_next_char()
+                else:
+                    raise Exception("Unterminated comment")
+                current_char = self.get_next_char()
+                continue
+            # если встретили цифру, начинаем собирать токен
+            if current_char.isdigit():
+                token = current_char
+                has_alpha = False # Флаг для проверки, если после цифры идет буква
+                while self.peek_next_char() and (self.peek_next_char().isalnum() or self.peek_next_char() == '_'):
+                    next_char = self.get_next_char()
+                    if next_char.isalpha(): # Если встретили букву после цифры
+                        has_alpha = True
+                    token += next_char
+                # Если встретили букву после цифры, это идентификатор
+                if has_alpha and token[0].isalpha():
+                    self.tokens.append(('IDENTIFICATOR', token))
+                elif not has_alpha:
+                    self.tokens.append(('NUMBER', token))
+                else:
+                    self.tokens.append(('UNKNOWN', token))
+
+            elif current_char.isalpha():
+                token = current_char
+                while self.peek_next_char() and self.peek_next_char().isalnum():
+                    token += self.get_next_char()
+                if token in self.keywords:
+                    self.tokens.append(('KEYWORD', token))
+                elif token in self.operations:
+                    self.tokens.append(('OPERATION', token))
+                else:
+                    self.tokens.append(('IDENTIFICATOR', token))
+
+            elif current_char == ':':
+                if self.peek_next_char() == '=':
+                    self.tokens.append(('OPERATION', ':='))
+                    self.get_next_char()
+                else:
+                    self.tokens.append(('DELIM', ':'))
+
+            elif current_char == '~':
+                self.tokens.append(('OPERATION', '~'))
+
+            elif current_char == '(':
+                self.tokens.append(('DELIM', '('))
+            elif current_char == ')':
+                self.tokens.append(('DELIM', ')'))
+
+            elif current_char == ';':
+                self.tokens.append(('DELIM', ';'))
+
+            elif current_char == ',':
+                self.tokens.append(('DELIM', ','))
+
+            current_char = self.get_next_char()
+
+        return self.tokens
+    def print_tokens(self):
+        print("\nTokens generated by lexer:") 
+        #Объявление функции print_tokens. Она не возвращает ничего, только печатает.
+        #Печатает строку "Tokens generated by lexer:" с пустой строкой перед ней, чтобы отделить текст. Это заголовок для списка токенов.
+        for token_type, token_value in self.tokens:
+            print(f"Token Type: {token_type}, Token Value: {token_value}")
+
+#Проходит по каждому токену в списке self.tokens.
+#token_type — тип токена (например, KEYWORD, NUMBER).
+#token_value — значение токена (например, dim, 5).
+#Печатает токен в формате:
+#plaintext
+#Копировать код
+#Token Type: KEYWORD, Token Value: dim
+#Token Type: IDENTIFICATOR, Token Value: a
 
 
-class Token:
-    def __init__(self, token_name, token_value):
-        self.token_name = token_name
-        self.token_value = token_value
+
+#Проверяет правильность последовательности токенов и строит дерево синтаксиса программы.
+#Parser — это синтаксический анализатор. Он проверяет, правильно ли расположены токены и выполняет инструкции, 
+#написанные в программе. Лексер уже разбил текст на токены, теперь парсер понимает, что это за программа и правильно ли она написана.
 
 
-class LexemeTable:
-    def __init__(self, tok=None):
-        self.tok = tok
-        self.next = None
+class Parser:
+    def __init__(self, tokens: List[Tuple[str, str]]):
+        self.tokens = tokens #это список токенов (кусочки программы).
+        self.pos = 0 #текущая позиция в списке токенов (начинается с 0).
+        self.current_token = self.tokens[self.pos] if self.tokens else None #текущий токен, с которым работает парсер.
+
+    def advance(self): #Двигается к следующему токену:
+        self.pos += 1 #Увеличивает pos на 1.
+        self.current_token = self.tokens[self.pos] if self.pos < len(self.tokens) else None #Обновляет current_token, чтобы он стал следующим токеном в списке.
+
+    def match(self, expected_type: str): #Проверяет, соответствует ли текущий токен ожидаемому типу:
+        if self.current_token and self.current_token[0] == expected_type: #Если совпадает, переходит к следующему токену с помощью advance().
+            self.advance()
+        else:
+            raise Exception(f"Expected {expected_type}, found {self.current_token}") #Если нет — выдаёт ошибку, потому что синтаксис программы неправильный.
+    def program(self): #Это главный метод, который анализирует всю программу:
+        while self.current_token and self.current_token[0] != 'KEYWORD' and self.current_token[1] != 'end':
+            #Цикл проверяет токены, пока не встретит ключевое слово end.
+            if self.current_token[0] == 'KEYWORD' and self.current_token[1] == 'dim':
+                self.description()
+            #Если встречается dim, вызывает description() для обработки объявления переменных.
+            else: #Если нет — обрабатывает операторы с помощью statement().
+                self.statement()
+            if self.current_token and self.current_token[0] == 'SEMICOLON':
+                self.match('SEMICOLON')
+        print("Program parsed successfully.")
+
+    def description(self):
+        self.match('KEYWORD') 
+        self.match('IDENTIFIER') 
+        while self.current_token and self.current_token[0] == 'COMMA':  
+            self.match('COMMA')
+            self.match('IDENTIFIER')  
+        self.match('DELIM')  
+        self.match('KEYWORD')  
+#Проверяет KEYWORD (dim).
+#Ищет переменные (IDENTIFIER, например, a, b).
+#Обрабатывает запятые и двоеточие.
+        
+    def statement(self):
+        if self.current_token and self.current_token[0] == 'IDENTIFIER':
+            self.assignment_statement()
+        elif self.current_token and self.current_token[1] == 'if':
+            self.if_statement()
+        elif self.current_token and self.current_token[1] == 'for':
+            self.for_statement()
+        elif self.current_token and self.current_token[1] == 'while':
+            self.while_statement()
+        elif self.current_token and self.current_token[1] == 'input':
+            self.input_statement()
+        elif self.current_token and self.current_token[1] == 'output':
+            self.output_statement()
+        else:
+            raise Exception("Unknown statement")
+#Пытается понять, какой оператор встретился:
+#assignment_statement() для присваивания (a := 5 plus 3).
+#if_statement() для условных операторов (if a GT b then ...).
+#while_statement() для циклов (while a LT b do ...).
+#input_statement() для ввода данных.
+#output_statement() для вывода данных.
+    def assignment_statement(self):
+        self.match('IDENTIFICATOR')
+        self.match('DELIM')
+        self.expression()
+#Обрабатывает присваивание:
+#a := 5 plus 3;
+#Ищет переменную a (IDENTIFICATOR).
+#Ищет присваивание := (DELIM).
+#Обрабатывает выражение 5 plus 3.
+
+    def if_statement(self):
+        self.match('KEYWORD')
+        self.expression()
+        self.match('KEYWORD')
+        self.statement()
+        if self.current_token and self.current_token[1] == 'else':
+            self.match('KEYWORD')
+            self.statement()
+#Обрабатывает условный оператор if:
+#if a GT b then
+    #a := a min b;
+#Проверяет условие a GT b.
+#Выполняет блок then, а если есть else, обрабатывает его.
+    def for_statement(self):
+        self.match('KEYWORD')
+        self.match('DELIM')
+        self.statement()
+        self.match('DELIM')
+
+    def while_statement(self):
+        self.match('KEYWORD')
+        self.expression()
+        self.match('KEYWORD')
+        self.statement()
+#Обрабатывает цикл while:
+#while a LT b do
+    #a := a div 2;
+
+    def input_statement(self):
+        self.match('KEYWORD')
+        self.match('DELIM')
+        self.match('IDENTIFIER')
+        self.match('DELIM')
+
+    def output_statement(self):
+        self.match('KEYWORD')
+        self.match('DELIM')
+        self.expression()
+        self.match('DELIM')
+#Разбирают ввод и вывод:
+#input(a);
+#output(a);
+    def expression(self):
+        self.match('IDENTIFIER')
+        while self.current_token and self.current_token[0] == 'OPERATION':
+            self.match('OPERATION')
+            self.match('IDENTIFICATOR')
 
 
-lt = None
-lt_head = None
+data = """
+dim a, b : integer;
+(* Комментарий *)
+a := 5 plus 3;
+if a GT b then
+    a := a min b;
+while a LT b do
+    a := a div 2x;
+    if a ~ 0 then
+        a := a plus 1;
+    end_else;
+input(a);
+output(a);
+end;
+"""
 
-keywords = ["integer", "real", "boolean", "let", "if", "then", "else", "end_else", "for", "do", "while", "loop",
-            "input", "output", "true", "false"]
-
-group_operations = {
-    "relation": ["NE", "EQ", "LT", "LE", "GT", "GE"],
-    "addition": ["plus", "min", "or"],
-    "multiplication": ["mult", "div", "and"],
-    "unary": ["~"]
-}
-
-delimiters = ['(', ')', '{', '}', ';', ',', ':', '"']
-bin_num = ['0', '1', 'B', 'b']
-oct_num = ['0', '1', '2', '3', '4', '5', '6', '7', 'O', 'o']
-dec_num = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'D', 'd']
-hex_num = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f', 'H', 'h']
-real_num = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'e', 'E', '.', '+', '-']
-
-
-def add_token(tok):
-    global lt, lt_head
-    new_entry = LexemeTable(tok)
-    if lt is None:
-        lt = new_entry
-        lt_head = new_entry
-    else:
-        lt.next = new_entry
-        lt = new_entry
-
-
-def is_kword(id):
-    return id in keywords
-
-
-def lexer(filename):
-    try:
-        with open(filename, "r") as fd:
-            CS = States.H
-            c = fd.read(1)
-            while c:
-                if CS == States.H:
-                    while c in [' ', '\t', '\n']:
-                        c = fd.read(1)
-                    if c.isalpha() or c == '_':
-                        CS = States.ID
-                    elif c.isdigit() or c == '.':
-                        CS = States.NUM
-                    elif c in delimiters:
-                        tok = Token(TokNames.DELIM, c)
-                        add_token(tok)
-                        c = fd.read(1)
-                    elif c == '/':
-                        c = fd.read(1)
-                        if c == '*':
-                            CS = States.COMM
-                            c = fd.read(1)
-                        else:
-                            tok = Token(TokNames.OPER, "/")
-                            add_token(tok)
-                            CS = States.H
-                    else:
-                        CS = States.OPER
-                elif CS == States.ID:
-                    buf = c
-                    c = fd.read(1)
-                    while c.isalnum() or c == '_':
-                        buf += c
-                        c = fd.read(1)
-                    if is_kword(buf):
-                        tok = Token(TokNames.KWORD, buf)
-                    else:
-                        tok = Token(TokNames.IDENT, buf)
-                    add_token(tok)
-                    CS = States.H
-                elif CS == States.NUM:
-                    buf = ''
-                    while c.isdigit() or c in real_num or c.isalpha():
-                        buf += c
-                        c = fd.read(1)
-                    tok = Token(TokNames.NUM, buf)
-                    add_token(tok)
-                    CS = States.H
-                elif CS == States.OPER:
-                    buf = c
-                    c = fd.read(1)
-                    while buf in group_operations['relation'] or buf in group_operations['addition'] or buf in group_operations['multiplication']:
-                        buf += c
-                        c = fd.read(1)
-                    tok = Token(TokNames.OPER, buf.strip())
-                    add_token(tok)
-                    CS = States.H
-                elif CS == States.COMM:
-                    while c:
-                        if c == '*':
-                            c = fd.read(1)
-                            if c == '/':
-                                CS = States.H
-                                c = fd.read(1)
-                                break
-                        c = fd.read(1)
-                elif CS == States.ERR:
-                    print(f"Error: Unexpected character {c}")
-                    CS = States.H
-
-    except FileNotFoundError:
-        print(f"Cannot open file {filename}.")
-        return -1
-
-
-def print_tokens(lt_head):
-    current = lt_head
-    while current:
-        print(f"Token Name: {current.tok.token_name}, Token Value: {current.tok.token_value}")
-        current = current.next
-
-
-def main():
-    filename = "test_lexical_analyzator.txt"
-    result = lexer(filename)
-    if result == -1:
-        print("Lexical analysis failed.")
-    else:
-        print("Lexical analysis successful.")
-        print_tokens(lt_head)
-
-
-if __name__ == "__main__":
-    main()
-
+lexer = Lexer(data)
+tokens = lexer.tokenize()
+lexer.print_tokens()  # Печать токенов
+parser = Parser(tokens)
+parser.program()
 
 ```
-
-test_lexical_analyzator.txt:
-
-```
-int a, b
-begin
-while (a = 1):
-    a:=61e+2;
-    writeln a;
-end(*Комментарий*)
-```
-
 
 ## Результат: 
 ```
-Lexical analysis successful.
-Token Name: IDENT, Token Value: int
-Token Name: IDENT, Token Value: a
-Token Name: DELIM, Token Value: ,
-Token Name: IDENT, Token Value: b
-Token Name: IDENT, Token Value: begin
-Token Name: KWORD, Token Value: while
-Token Name: DELIM, Token Value: (
-Token Name: IDENT, Token Value: a
-Token Name: OPER, Token Value: =
-Token Name: NUM, Token Value: 1
-Token Name: DELIM, Token Value: )
-Token Name: DELIM, Token Value: :
-Token Name: IDENT, Token Value: a
-Token Name: DELIM, Token Value: :
-Token Name: OPER, Token Value: =
-Token Name: NUM, Token Value: 61e+2
-Token Name: DELIM, Token Value: ;
-Token Name: IDENT, Token Value: writeln
-Token Name: IDENT, Token Value: a
-Token Name: DELIM, Token Value: ;
-Token Name: IDENT, Token Value: end
-Token Name: DELIM, Token Value: (
-Token Name: OPER, Token Value: *
-Token Name: IDENT, Token Value: Комментарий
-Token Name: OPER, Token Value: *
-Token Name: DELIM, Token Value: )
+Tokens generated by lexer:
+Token Type: KEYWORD, Token Value: dim
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: DELIM, Token Value: ,
+Token Type: IDENTIFICATOR, Token Value: b
+Token Type: DELIM, Token Value: :
+Token Type: IDENTIFICATOR, Token Value: integer
+Token Type: DELIM, Token Value: ;
+Token Type: DELIM, Token Value: (*
+Token Type: IDENTIFICATOR, Token Value: Комментарий
+Token Type: DELIM, Token Value: *)
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: OPERATION, Token Value: :=
+Token Type: NUMBER, Token Value: 5
+Token Type: OPERATION, Token Value: plus
+Token Type: NUMBER, Token Value: 3
+Token Type: DELIM, Token Value: ;
+Token Type: KEYWORD, Token Value: if
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: OPERATION, Token Value: GT
+Token Type: IDENTIFICATOR, Token Value: b
+Token Type: KEYWORD, Token Value: then
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: OPERATION, Token Value: :=
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: OPERATION, Token Value: min
+Token Type: IDENTIFICATOR, Token Value: b
+Token Type: DELIM, Token Value: ;
+Token Type: KEYWORD, Token Value: while
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: OPERATION, Token Value: LT
+Token Type: IDENTIFICATOR, Token Value: b
+Token Type: KEYWORD, Token Value: do
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: OPERATION, Token Value: :=
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: OPERATION, Token Value: div
+Token Type: UNKNOWN, Token Value: 2x
+Token Type: DELIM, Token Value: ;
+Token Type: KEYWORD, Token Value: if
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: OPERATION, Token Value: ~
+Token Type: NUMBER, Token Value: 0
+Token Type: KEYWORD, Token Value: then
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: OPERATION, Token Value: :=
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: OPERATION, Token Value: plus
+Token Type: NUMBER, Token Value: 1
+Token Type: DELIM, Token Value: ;
+Token Type: KEYWORD, Token Value: end
+Token Type: KEYWORD, Token Value: else
+Token Type: DELIM, Token Value: ;
+Token Type: KEYWORD, Token Value: input
+Token Type: DELIM, Token Value: (
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: DELIM, Token Value: )
+Token Type: DELIM, Token Value: ;
+Token Type: KEYWORD, Token Value: output
+Token Type: DELIM, Token Value: (
+Token Type: IDENTIFICATOR, Token Value: a
+Token Type: DELIM, Token Value: )
+Token Type: DELIM, Token Value: ;
+Token Type: KEYWORD, Token Value: end
+Token Type: DELIM, Token Value: ;
+Program parsed successfully.
 
 ```
-
-<img width="763" alt="Screenshot 2024-11-21 at 04 00 38" src="https://github.com/user-attachments/assets/410b6947-5342-44ae-a43a-e7a73cd58e28">
-
-<img width="755" alt="Screenshot 2024-11-21 at 04 00 50" src="https://github.com/user-attachments/assets/7b740a73-827f-497d-aa2b-fb8c06c5f391">
-
-Открываем терминал:
-
-<img width="767" alt="Screenshot 2024-11-21 at 04 01 21" src="https://github.com/user-attachments/assets/5595baa4-0169-49b8-bcd9-4be7dab14c66">
+<img width="1235" alt="Screenshot 2024-12-08 at 19 20 12" src="https://github.com/user-attachments/assets/d2335d0a-5c5e-4079-874a-bacb173ebca3">
+<img width="1240" alt="Screenshot 2024-12-08 at 19 20 27" src="https://github.com/user-attachments/assets/8e711f2f-f0f9-4ea6-92ae-88581ccb0336">
 
