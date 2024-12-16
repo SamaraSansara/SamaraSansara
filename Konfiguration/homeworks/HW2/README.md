@@ -17,4 +17,6 @@ python3 dependency_visualizer.py --config config.xml
 
 ## Результат программы:
 <img width="845" alt="Screenshot 2024-12-16 at 10 35 35" src="https://github.com/user-attachments/assets/85830294-c800-48f4-9d3f-b23cf7cc400e" />
-![output_graph](https://github.com/user-attachments/assets/00c9a3a0-796d-4762-81c5-65a15b2a12eb)
+
+
+![output_graph](https://github.com/user-attachments/assets/debce7f7-75c9-4639-8d3e-2a149d2ca1e4)
