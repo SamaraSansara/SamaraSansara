@@ -1,0 +1,5 @@
+<config>
+    <mermaidPath>/opt/homebrew/bin/mmdc</mermaidPath>
+    <repoPath>/Users/veronikaudzhukhu/Documents/RTU_MIREA/2_KURSE/Konfiguration/DZ_2/DZ2_pseudo-doom</repoPath>
+    <outputPath>/Users/veronikaudzhukhu/Documents/RTU_MIREA/2_KURSE/Konfiguration/DZ_2/output_graph.png</outputPath>
+</config>
